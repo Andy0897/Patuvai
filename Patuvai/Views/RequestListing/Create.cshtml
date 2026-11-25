@@ -1,0 +1,74 @@
+﻿@model Patuvai.ViewModels.RequestListing.RequestListingFormViewModel
+
+@using Patuvai.Models
+
+@{
+    ViewData["Title"] = "Създаване на обява за транспорт";
+    var cities = ViewData["Cities"] as List<City> ?? new List<City>();
+}
+
+<form asp-action="Create" method="post" class="row g-3">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3 col-12">
+        <label asp-for="TransportServiceType" class="form-label">Тип транспорт</label>
+        <select asp-for="TransportServiceType" class="form-select"
+                asp-items="Html.GetEnumSelectList<Patuvai.Models.Enums.TransportServiceType>()">
+            <option value="">-- Моля изберете --</option>
+        </select>
+        <span asp-validation-for="TransportServiceType" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-12">
+        <label asp-for="Description" class="form-label">Описание</label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-md-6">
+        <label asp-for="Budget" class="form-label">Бюджет</label>
+        <input asp-for="Budget" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Budget" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-md-6">
+        <label asp-for="FromCityId" class="form-label">От град</label>
+        <select asp-for="FromCityId" class="form-select">
+            <option value="">-- Моля изберете --</option>
+            @foreach (var city in cities)
+            {
+                <option value="@city.Id">@city.Name</option>
+            }
+        </select>
+        <span asp-validation-for="FromCityId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-md-6">
+        <label asp-for="ToCityId" class="form-label">До град</label>
+        <select asp-for="ToCityId" class="form-select">
+            <option value="">-- Моля изберете --</option>
+            @foreach (var city in cities)
+            {
+                <option value="@city.Id">@city.Name</option>
+            }
+        </select>
+        <span asp-validation-for="ToCityId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-md-6">
+        <label asp-for="RequestDate" class="form-label">Дата на заявката</label>
+        <input asp-for="RequestDate" type="date" class="form-control" />
+        <span asp-validation-for="RequestDate" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Създай</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Отказ</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

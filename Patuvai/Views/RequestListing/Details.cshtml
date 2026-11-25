@@ -1,0 +1,50 @@
+﻿@model Patuvai.ViewModels.RequestListing.RequestListingDetailsViewModel
+
+@{
+    ViewData["Title"] = "Детайли за заявката";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Дата на заявката</dt>
+            <dd class="col-sm-9">@Model.RequestDate.ToString("dd.MM.yyyy")</dd>
+
+            <dt class="col-sm-3">Вид транспортна услуга</dt>
+            <dd class="col-sm-9">@Model.TransportServiceType.ToString()</dd>
+
+            <dt class="col-sm-3">Описание</dt>
+            <dd class="col-sm-9">@Html.Raw(Html.Encode(Model.Description).Replace("\n", "<br />"))</dd>
+
+            <dt class="col-sm-3">Бюджет</dt>
+            <dd class="col-sm-9">@String.Format("{0:C}", Model.Budget)</dd>
+
+            <dt class="col-sm-3">От град</dt>
+            <dd class="col-sm-9">@Model.FromCity?.Name</dd>
+
+            <dt class="col-sm-3">До град</dt>
+            <dd class="col-sm-9">@Model.ToCity?.Name</dd>
+
+            <dt class="col-sm-3">Публикувал</dt>
+            <dd class="col-sm-9">@Model.Publisher?.FirstName @Model.Publisher?.LastName - @Model.Publisher?.Email</dd>
+
+            <dt class="col-sm-3">Създадена на</dt>
+            <dd class="col-sm-9">@Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</dd>
+        </dl>
+
+        <div class="mt-3">
+            <a asp-action="List" class="btn btn-secondary">Назад към списъка</a>
+			@if (Model.isOwner)
+			{
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Редактирай</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Изтрий</a>
+			}
+
+            <form asp-controller="Conversation" asp-action="Create" asp-route-listingId="@Model.Id" method="post">
+                <button type="submit" class="btn btn-info">Започни разговор</button>
+            </form>
+        </div>
+    </div>
+</div>

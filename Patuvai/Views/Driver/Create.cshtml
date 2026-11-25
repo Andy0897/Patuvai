@@ -1,0 +1,77 @@
+﻿@model Patuvai.ViewModels.Driver.DriverFormViewModel
+
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-5">
+
+                    <div class="text-center mb-4">
+
+                        <h2 class="fw-bold mb-2">
+
+                            Стани шофьор
+
+                        </h2>
+
+                    </div>
+
+                    <form asp-action="Create" method="post">
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label asp-for="Introduction"
+                                   class="form-label fw-semibold"></label>
+
+                            <textarea asp-for="Introduction"
+                                      class="form-control form-control-lg"
+                                      rows="4"></textarea>
+
+                            <span asp-validation-for="Introduction"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input asp-for="AcceptDriverDeclaration" class="form-check-input" />
+                            <label asp-for="AcceptDriverDeclaration" class="form-check-label">
+                                Съгласен съм с <a asp-controller="Policy" asp-action="Policy" asp-route-policyType="DriverDeclaration" target="_blank">Декларацията за шофьори</a>
+                            </label>
+                            <span asp-validation-for="AcceptDriverDeclaration" class="text-danger d-block"></span>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-dark btn-lg w-100">
+
+							Запази
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

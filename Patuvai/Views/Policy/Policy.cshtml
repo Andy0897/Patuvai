@@ -1,0 +1,10 @@
+﻿@model Patuvai.Models.Policy;
+@using Patuvai.Extensions;
+@{
+	ViewData["Title"] = Model.Type.GetDisplayName();
+}
+
+<div>
+	<h1>@Model.Type.GetDisplayName()</h1>
+	<p>@Model.Content</p>
+</div>

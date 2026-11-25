@@ -1,0 +1,256 @@
+﻿@model Patuvai.ViewModels.OfferListing.OfferListingFormViewModel
+@using Patuvai.Models
+@using Patuvai.Models.Enums
+
+@{
+    ViewData["Title"] = "Създаване на обява";
+
+    var cities = ViewData["Cities"] as List<City> ?? new List<City>();
+
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <h2 class="mb-4">Нова обява за пътуване</h2>
+
+            <form asp-action="Create" method="post" class="row g-4">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger"></div>
+
+                <!-- Frequency -->
+                <div class="col-12">
+                    <label asp-for="Frequency" class="form-label">
+                        Честота на пътуване
+                    </label>
+
+                    <select asp-for="Frequency"
+                            class="form-select"
+                            id="Frequency">
+                        <option value="">-- Изберете честота --</option>
+                        <option value="@TripFrequency.ONE_TIME">Еднократно</option>
+                        <option value="@TripFrequency.RECURRING">Редовно</option>
+                    </select>
+
+                    <span asp-validation-for="Frequency" class="text-danger"></span>
+                </div>
+
+                <!-- One-time trip -->
+                <div class="col-12" id="TripDateField" style="display: none;">
+                    <label asp-for="TripDate" class="form-label">
+                        Дата на пътуване
+                    </label>
+
+                    <input asp-for="TripDate"
+                           type="date"
+                           class="form-control" />
+
+                    <span asp-validation-for="TripDate" class="text-danger"></span>
+                </div>
+
+                <!-- Recurring trip -->
+                <div class="col-12" id="RecurringDaysField" style="display: none;">
+                    <label class="form-label">Дни на пътуване</label>
+
+                    <div class="d-flex flex-wrap gap-3">
+                        @foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek))) {
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       name="RecurringDays"
+                                       value="@day"
+                                       class="form-check-input"
+                                       id="day_@day"
+                                       checked="@Model.RecurringDays.Contains(day)" />
+
+                                <label class="form-check-label" for="day_@day">
+                                    @day
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Transport options -->
+                <div class="col-12">
+                    <label class="form-label">Какво предлагате?</label>
+
+                    <div class="form-check mb-2">
+                        <input asp-for="PassengerTransport"
+                               class="form-check-input" />
+
+                        <label asp-for="PassengerTransport"
+                               class="form-check-label">
+                            Превоз на пътници
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="LuggageTransport"
+                               class="form-check-input" />
+
+                        <label asp-for="LuggageTransport"
+                               class="form-check-label">
+                            Превоз на багаж
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Route -->
+                <div class="col-12">
+                    <label class="form-label">Маршрут</label>
+
+                    <p class="text-muted small">
+                        Изберете градовете в последователността,
+                        в която преминавате през тях.
+                    </p>
+
+                    <div id="routeContainer" class="d-flex flex-column gap-2">
+
+                        @if (Model.RouteCityIds.Count > 0)
+                        {
+                            foreach (var cityId in Model.RouteCityIds)
+                            {
+                                <div class="input-group route-item">
+                                    <select name="RouteCityIds" class="form-select" required>
+                                        <option value="">Изберете град</option>
+
+                                        @foreach (var city in cities)
+                                        {
+                                            <option value="@city.Id"
+                                                    selected="@(city.Id == cityId)">
+                                                @city.Name
+                                            </option>
+                                        }
+                                    </select>
+
+                                    <button type="button"
+                                            class="btn btn-outline-danger remove-route">
+                                        Премахни
+                                    </button>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="input-group route-item">
+                                <select name="RouteCityIds" class="form-select" required>
+                                    <option value="">Изберете град</option>
+
+                                    @foreach (var city in cities)
+                                    {
+                                        <option value="@city.Id">@city.Name</option>
+                                    }
+                                </select>
+
+                                <button type="button"
+                                        class="btn btn-outline-danger remove-route">
+                                    Премахни
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+
+                    <button type="button"
+                            id="addRoute"
+                            class="btn btn-outline-primary btn-sm mt-3">
+                        + Добави град
+                    </button>
+                </div>
+
+                <!-- Template for new route stops -->
+                <template id="routeTemplate">
+                    <div class="input-group route-item">
+                        <select name="RouteCityIds" class="form-select" required>
+                            <option value="">Изберете град</option>
+
+                            @foreach (var city in cities)
+                            {
+                                <option value="@city.Id">@city.Name</option>
+                            }
+                        </select>
+
+                        <button type="button"
+                                class="btn btn-outline-danger remove-route">
+                            Премахни
+                        </button>
+                    </div>
+                </template>
+
+                <!-- Buttons -->
+                <div class="col-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        Създай обява
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+                        Отказ
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const frequencySelect = document.getElementById("Frequency");
+
+        const tripDateField = document.getElementById("TripDateField");
+        const recurringDaysField = document.getElementById("RecurringDaysField");
+
+        const tripDateInput = document.getElementById("TripDate");
+
+        function selectFrequency() {
+            const selectedValue = frequencySelect.value;
+
+            const isOneTime = selectedValue === "ONE_TIME";
+            const isRecurring = selectedValue === "RECURRING";
+
+            tripDateField.style.display = isOneTime ? "block" : "none";
+            recurringDaysField.style.display = isRecurring ? "block" : "none";
+
+            tripDateInput.required = isOneTime;
+
+            tripDateInput.disabled = !isOneTime;
+
+            recurringDaysField.querySelectorAll("input[type='checkbox']")
+                .forEach(input => {
+                    input.disabled = !isRecurring;
+                });
+        }
+
+        frequencySelect.addEventListener("change", selectFrequency);
+
+        selectFrequency();
+
+        // Route management
+        const routeContainer = document.getElementById("routeContainer");
+        const addRouteButton = document.getElementById("addRoute");
+        const routeTemplate = document.getElementById("routeTemplate");
+
+        addRouteButton.addEventListener("click", () => {
+            const newRouteStop = routeTemplate.content.cloneNode(true);
+
+            routeContainer.appendChild(newRouteStop);
+        });
+
+        routeContainer.addEventListener("click", event => {
+            if (event.target.classList.contains("remove-route")) {
+
+                const routeItems = routeContainer.querySelectorAll(".route-item");
+
+                if (routeItems.length > 1) {
+                    event.target.closest(".route-item").remove();
+                }
+            }
+        });
+    </script>
+}

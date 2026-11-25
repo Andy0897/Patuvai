@@ -1,0 +1,65 @@
+﻿@{
+	ViewData["Title"] = "Информация за шофьора";
+}
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">Driver not found.</div>
+}
+else
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h2 class="card-title">@($"{Model.FirstName} {Model.LastName}")</h2>
+            <p class="text-muted mb-2">Присъединил се: @Model.CreatedAt.ToString("g")</p>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Introduction))
+            {
+                <h5>Представяне</h5>
+                <p>@Model.Introduction</p>
+            }
+
+            <div class="d-flex align-items-center mt-3">
+                <div class="me-3">
+                    <strong>Рейтинг:</strong>
+                    <span class="badge bg-primary">@Model.AverageRating.ToString("0.0")</span>
+                </div>
+                <div class="me-3">
+                    <strong>Брой ревюта:</strong> @Model.ReviewsCount
+                </div>
+                <div>
+                    @{
+                        var fullStars = (int)Math.Floor(Model.AverageRating);
+                        var maxStars = 5;
+                    }
+                    <div aria-label="Rating" title="@Model.AverageRating.ToString("0.0")">
+                        @for (int i = 0; i < maxStars; i++)
+                        {
+                            if (i < fullStars)
+                            {
+                                <span style="color: #f5b50a;">&#9733;</span>
+                            }
+                            else
+                            {
+                                <span style="color: #ccc;">&#9734;</span>
+                            }
+                        }
+                    </div>
+                </div>
+                @if (Model.CanAddReview)
+                {
+                    <div class="ms-3">
+                        <a asp-controller="Review" asp-action="Create" asp-route-id="@Model.DriverId" class="btn btn-primary">Добави ревю</a>
+                    </div>
+                }
+				else
+				{
+					<div class="ms-3">
+						<span class="text-muted">Не можете да добавите ревю за този шофьор.</span>
+					</div>
+				}
+            </div>
+        </div>
+    </div>
+    <a asp-action="Index" asp-controller="Driver" class="btn btn-secondary">Назад към списъка</a>
+}

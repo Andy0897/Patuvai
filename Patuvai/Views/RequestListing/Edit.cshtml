@@ -1,0 +1,50 @@
+﻿@model Patuvai.ViewModels.RequestListing.RequestListingEditFormViewModel
+
+@{
+    ViewData["Title"] = "Редактиране на обяма за транспорт";
+}
+
+<h2>Редактиране на обяма за транспорт</h2>
+
+<form asp-action="Edit" method="post" class="form-horizontal">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input asp-for="Id" type="hidden" />
+
+    <div class="mb-3 col-md-6">
+        <label asp-for="RequestDate" class="form-label">Дата на заявката</label>
+        <input asp-for="RequestDate" type="date" class="form-control" />
+        <span asp-validation-for="RequestDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-12">
+        <label asp-for="TransportServiceType" class="form-label">Тип транспорт</label>
+        <select asp-for="TransportServiceType" class="form-select"
+                asp-items="Html.GetEnumSelectList<Patuvai.Models.Enums.TransportServiceType>()">
+            <option value="">-- Моля изберете --</option>
+        </select>
+        <span asp-validation-for="TransportServiceType" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-12">
+        <label asp-for="Description" class="form-label">Описание</label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-md-6">
+        <label asp-for="Budget" class="form-label">Бюджет</label>
+        <input asp-for="Budget" type="number" step="0.01" class="form-control" />
+        <span asp-validation-for="Budget" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Запази</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Отказ</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

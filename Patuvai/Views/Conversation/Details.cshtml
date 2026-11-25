@@ -1,0 +1,46 @@
+﻿@model Patuvai.ViewModels.Conversation.ConversationDetailsViewModel
+
+<div id="messagesList">
+	@foreach (Message msg in Model.Messages) {
+	    <div id="message">
+			<p>@msg.Sender.FirstName @msg.Sender.LastName - @msg.Content</p>
+		</div>
+	}
+</div>
+<div>
+	<textarea id="messageField" placeholder="Напишете съобщение..." oninput="checkField()"></textarea>
+	<button id="sendButton" hidden="hidden">Изпрати</button>
+</div>
+
+@section Scripts  {
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+	<script>
+		const conversationId = @Model.ConversationId;
+		const connection = new signalR.HubConnectionBuilder()
+			 .withUrl(`/conversationHub?conversationId=${conversationId}`)
+			 .build();
+
+		connection.start()
+			.catch(err => console.error(err.toString()));
+
+		document.getElementById("sendButton").addEventListener("click", () => {
+			const message = document.getElementById("messageField").value;
+			console.log('Sent a message');
+			connection.invoke("SendMessage", message, @Model.ConversationId)
+				.catch(err => console.error(err.toString()));
+		});
+
+		connection.on("ReceiveMessage", (message) => {
+			const p = document.createElement("p");
+			p.textContent = `${message.Sender.FirstName} ${message.Sender.LastName} - ${message.Content}`;
+			document.getElementById("messagesList").appendChild(p);
+			document.getElementById("messageField").value = "";
+		});
+
+		function checkField() {
+			const messageField = document.getElementById("messageField");
+			const sendButton = document.getElementById("sendButton");
+			sendButton.hidden = messageField.value == "";
+		}
+	</script>
+}

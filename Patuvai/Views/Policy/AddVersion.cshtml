@@ -1,0 +1,71 @@
+﻿@model Patuvai.ViewModels.Policy.PolicyFormViewModel
+@using Patuvai.Extensions;
+
+@{
+	ViewData["Title"] = "Добави версия";
+}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-5">
+
+                    <div class="text-center mb-4">
+
+                        <h2 class="fw-bold mb-2">
+
+                            Добавяне на версия
+
+                        </h2>
+
+                        <h2 class="fw-bold mb-2">
+
+							@Model.Type.GetDisplayName()
+
+                        </h2>
+
+                    </div>
+
+                    <form asp-controller="Policy" asp-action="AddVersion" method="post">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <input asp-for="Type" type="hidden"/>
+
+                        <input asp-for="Version" type="hidden"/>
+
+                        <div class="mb-3">
+
+                            <label asp-for="Content"
+                                   class="form-label fw-semibold"></label>
+
+                            <textarea asp-for="Content" class="form-control form-control-lg"></textarea>
+
+                            <span asp-validation-for="Content"
+                                  class="text-danger"></span>
+
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-dark btn-lg w-100">
+
+                            Публикувай
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

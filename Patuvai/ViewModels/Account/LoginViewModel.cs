@@ -1,0 +1,17 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Patuvai.ViewModels.Account
+{
+    public class LoginViewModel
+    {
+        [Required(ErrorMessage = "Имейлът е задължителен.")]
+        [EmailAddress(ErrorMessage = "Въведете валиден имейл адрес.")]
+        [Display(Name = "Имейл")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Паролата е задължителна.")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Парола")]
+        public string Password { get; set; } = string.Empty;
+    }
+}
